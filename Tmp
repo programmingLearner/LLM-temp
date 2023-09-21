@@ -1,14 +1,25 @@
 from transformers import T5ForConditionalGeneration
-
 model = T5ForConditionalGeneration.from_pretrained("t5-11b")
-weights = model.decoder.block[0].layer[0].SelfAttention.q.weight.detach().cpu().numpy()
 
 import matplotlib.pyplot as plt
 
-plt.hist(weights.flatten(), bins=100, alpha=0.75)
-plt.title("Histogram of Weights")
-plt.xlabel("Weight Value")
-plt.ylabel("Frequency")
+# Define a function to plot histograms
+def plot_histogram(weights, layer_name):
+    plt.figure()
+    plt.hist(weights.flatten(), bins=100, alpha=0.75)
+    plt.title(f"Histogram of {layer_name}")
+    plt.xlabel("Weight Value")
+    plt.ylabel("Frequency")
+    plt.savefig(f"{layer_name}_histogram.png")
+    plt.close()
 
-# Save the figure
-plt.savefig("weights_histogram.png")
+# Iterate over named parameters and plot histograms
+for name, param in model.named_parameters():
+    if param.requires_grad:
+        plot_histogram(param.detach().cpu().numpy(), name)
+
+# Open a file to save model information
+with open("t5_11b_info.txt", "w") as f:
+    # Write model architecture to file
+    f.write(str(model))
+    f.write("\n\n")
