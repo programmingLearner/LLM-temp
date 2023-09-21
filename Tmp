@@ -1,0 +1,14 @@
+from transformers import T5ForConditionalGeneration
+
+model = T5ForConditionalGeneration.from_pretrained("t5-11b")
+weights = model.decoder.block[0].layer[0].SelfAttention.q.weight.detach().cpu().numpy()
+
+import matplotlib.pyplot as plt
+
+plt.hist(weights.flatten(), bins=100, alpha=0.75)
+plt.title("Histogram of Weights")
+plt.xlabel("Weight Value")
+plt.ylabel("Frequency")
+
+# Save the figure
+plt.savefig("weights_histogram.png")
