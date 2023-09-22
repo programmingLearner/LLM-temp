@@ -1,25 +1,9 @@
-from transformers import T5ForConditionalGeneration
-model = T5ForConditionalGeneration.from_pretrained("t5-11b")
-
-import matplotlib.pyplot as plt
-
-# Define a function to plot histograms
 def plot_histogram(weights, layer_name):
     plt.figure()
-    plt.hist(weights.flatten(), bins=100, alpha=0.75)
+    plt.hist(weights.flatten(), bins=100, alpha=0.75, log=True)  # Set log scale for bin count
     plt.title(f"Histogram of {layer_name}")
     plt.xlabel("Weight Value")
-    plt.ylabel("Frequency")
+    plt.ylabel("Frequency (Log Scale)")
+    plt.yscale('log')  # Set the y-axis to a logarithmic scale
     plt.savefig(f"{layer_name}_histogram.png")
     plt.close()
-
-# Iterate over named parameters and plot histograms
-for name, param in model.named_parameters():
-    if param.requires_grad:
-        plot_histogram(param.detach().cpu().numpy(), name)
-
-# Open a file to save model information
-with open("t5_11b_info.txt", "w") as f:
-    # Write model architecture to file
-    f.write(str(model))
-    f.write("\n\n")
