@@ -1,9 +1,37 @@
-def plot_histogram(weights, layer_name):
+from transformers import T5ForConditionalGeneration, T5Tokenizer
+model = T5ForConditionalGeneration.from_pretrained("t5-11b")
+tokenizer = T5Tokenizer.from_pretrained("t5-11b")
+
+input_text = "Your specific sentence here."
+inputs = tokenizer(input_text, return_tensors="pt")
+
+activations = {}
+
+def hook_fn(module, input, output):
+    layer_name = str(module)
+    activations[layer_name] = output
+
+# Attach the hook to each layer of the model
+for name, layer in model.named_modules():
+    layer.register_forward_hook(hook_fn)
+
+import matplotlib.pyplot as plt
+
+# Run the model
+with torch.no_grad():
+    model(**inputs)
+
+# Define a function to plot histograms
+def plot_histogram(activation, layer_name):
     plt.figure()
-    plt.hist(weights.flatten(), bins=100, alpha=0.75, log=True)  # Set log scale for bin count
+    plt.hist(activation.flatten().cpu().numpy(), bins=100, alpha=0.75, log=True)
     plt.title(f"Histogram of {layer_name}")
-    plt.xlabel("Weight Value")
+    plt.xlabel("Activation Value")
     plt.ylabel("Frequency (Log Scale)")
-    plt.yscale('log')  # Set the y-axis to a logarithmic scale
-    plt.savefig(f"{layer_name}_histogram.png")
+    plt.yscale('log')
+    plt.savefig(f"{layer_name}_activation_histogram.png")
     plt.close()
+
+# Iterate over activations and plot histograms
+for name, activation in activations.items():
+    plot_histogram(activation, name)
