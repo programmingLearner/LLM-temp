@@ -1,12 +1,20 @@
-# Define the maximum length for the file name
-max_length = 255
+import torch
+import matplotlib.pyplot as plt
 
-# Suppose you have a long file name
-long_file_name = "This_is_a_very_long_file_name_with_many_characters.txt"
-
-# Truncate the file name to ensure it doesn’t exceed the maximum length
-# Ensure to keep the file extension intact
-base_name, extension = os.path.splitext(long_file_name)
-truncated_name = base_name[:max_length - len(extension)] + extension
-
-print(truncated_name)
+# Assuming `activations` is a dictionary storing the layer outputs
+for layer_name, activation in activations.items():
+    if not isinstance(activation, torch.Tensor):
+        # Handle non-tensor activations (e.g., tuple)
+        for i, act in enumerate(activation):
+            if isinstance(act, torch.Tensor) and act.dim() > 1: 
+                plt.figure()
+                plt.title(f"{layer_name} - Index {i}")
+                plt.hist(act.flatten().cpu().numpy(), bins=100, log=True)
+                plt.savefig(f"{layer_name}_index_{i}.png")
+    else:
+        # Handle tensor activations
+        if activation.dim() > 1:
+            plt.figure()
+            plt.title(layer_name)
+            plt.hist(activation.flatten().cpu().numpy(), bins=100, log=True)
+            plt.savefig(f"{layer_name}.png")
