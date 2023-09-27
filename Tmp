@@ -1,20 +1,14 @@
-import torch
-import matplotlib.pyplot as plt
+from transformers import T5Config, T5Tokenizer, T5ForConditionalGeneration
 
-# Assuming `activations` is a dictionary storing the layer outputs
-for layer_name, activation in activations.items():
-    if not isinstance(activation, torch.Tensor):
-        # Handle non-tensor activations (e.g., tuple)
-        for i, act in enumerate(activation):
-            if isinstance(act, torch.Tensor) and act.dim() > 1: 
-                plt.figure()
-                plt.title(f"{layer_name} - Index {i}")
-                plt.hist(act.flatten().cpu().numpy(), bins=100, log=True)
-                plt.savefig(f"{layer_name}_index_{i}.png")
-    else:
-        # Handle tensor activations
-        if activation.dim() > 1:
-            plt.figure()
-            plt.title(layer_name)
-            plt.hist(activation.flatten().cpu().numpy(), bins=100, log=True)
-            plt.savefig(f"{layer_name}.png")
+# Load the pre-trained model configuration
+model_name = "t5-small"
+config = T5Config.from_pretrained(model_name)
+
+# Update the configuration to output hidden states
+config.output_hidden_states = True
+
+# Load the pre-trained model with the updated configuration
+model = T5ForConditionalGeneration.from_pretrained(model_name, config=config)
+tokenizer = T5Tokenizer.from_pretrained(model_name)
+
+# Now when you perform a forward pass with the model, it will output all hidden states.
