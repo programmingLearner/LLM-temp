@@ -1,14 +1,22 @@
-from transformers import T5Config, T5Tokenizer, T5ForConditionalGeneration
+import numpy as np
 
-# Load the pre-trained model configuration
-model_name = "t5-small"
-config = T5Config.from_pretrained(model_name)
+# Set the random seed for reproducibility
+np.random.seed(0)
 
-# Update the configuration to output hidden states
-config.output_hidden_states = True
+# Define dimensions
+n, m = 100, 50  # n = length of x, m = number of rows in W
 
-# Load the pre-trained model with the updated configuration
-model = T5ForConditionalGeneration.from_pretrained(model_name, config=config)
-tokenizer = T5Tokenizer.from_pretrained(model_name)
+# Gaussian input vector x
+x = np.random.randn(n)
 
-# Now when you perform a forward pass with the model, it will output all hidden states.
+# Gaussian matrix W
+W = np.random.randn(m, n)
+
+# Compute y = ReLU(Wx)
+y = np.dot(W, x)
+y = np.maximum(0, y)  # Applying the ReLU function element-wise
+
+# Find sparsity ratio
+sparsity_ratio = (y == 0).sum() / m
+
+print("Sparsity Ratio:", sparsity_ratio)
