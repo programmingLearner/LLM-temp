@@ -4,7 +4,7 @@ prefix="./some/path/"
 
 for dir in ${prefix}zeroed*/; do
     if [ -d "$dir" ]; then
-        # Execute your Python script with the directory name as an argument
-        python3 your_script.py "$dir"
+        # Redirecting output to a file named "output.txt", appending to its contents
+        python3 your_script.py "$dir" >> output.txt
     fi
 done
