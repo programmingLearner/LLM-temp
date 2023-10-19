@@ -1,27 +1,8 @@
-import numpy as np
+#!/bin/bash
 
-# Sample list of numbers
-numbers = [10, -5, 12, -3, 8, -7]
-
-# Convert to numpy array
-arr = np.array(numbers)
-
-# Get the indices of positive numbers
-positive_indices = np.where(arr > 0)[0]
-print("Original indices of positive numbers:", positive_indices)
-
-# Get the positive numbers
-positive_numbers = arr[positive_indices]
-print("Positive numbers:", positive_numbers)
-
-# Get the indices that would sort the positive numbers in descending order
-sort_indices = np.argsort(-positive_numbers)
-print("Indices for sorted positive numbers:", sort_indices)
-
-# Sort the positive numbers
-sorted_positive_numbers = positive_numbers[sort_indices]
-print("Sorted positive numbers (large to small):", sorted_positive_numbers)
-
-# Get the original indices in sorted order
-sorted_original_indices = positive_indices[sort_indices]
-print("Original indices in sorted order:", sorted_original_indices)
+for dir in zeroed*/; do
+    if [ -d "$dir" ]; then
+        # Execute your Python script with the directory name as an argument
+        python3 your_script.py "$dir"
+    fi
+done
