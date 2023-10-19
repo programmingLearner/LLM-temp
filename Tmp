@@ -1,22 +1,27 @@
 import numpy as np
 
-# Set the random seed for reproducibility
-np.random.seed(0)
+# Sample list of numbers
+numbers = [10, -5, 12, -3, 8, -7]
 
-# Define dimensions
-n, m = 100, 50  # n = length of x, m = number of rows in W
+# Convert to numpy array
+arr = np.array(numbers)
 
-# Gaussian input vector x
-x = np.random.randn(n)
+# Get the indices of positive numbers
+positive_indices = np.where(arr > 0)[0]
+print("Original indices of positive numbers:", positive_indices)
 
-# Gaussian matrix W
-W = np.random.randn(m, n)
+# Get the positive numbers
+positive_numbers = arr[positive_indices]
+print("Positive numbers:", positive_numbers)
 
-# Compute y = ReLU(Wx)
-y = np.dot(W, x)
-y = np.maximum(0, y)  # Applying the ReLU function element-wise
+# Get the indices that would sort the positive numbers in descending order
+sort_indices = np.argsort(-positive_numbers)
+print("Indices for sorted positive numbers:", sort_indices)
 
-# Find sparsity ratio
-sparsity_ratio = (y == 0).sum() / m
+# Sort the positive numbers
+sorted_positive_numbers = positive_numbers[sort_indices]
+print("Sorted positive numbers (large to small):", sorted_positive_numbers)
 
-print("Sparsity Ratio:", sparsity_ratio)
+# Get the original indices in sorted order
+sorted_original_indices = positive_indices[sort_indices]
+print("Original indices in sorted order:", sorted_original_indices)
