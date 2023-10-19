@@ -1,6 +1,8 @@
 #!/bin/bash
 
-for dir in zeroed*/; do
+prefix="./some/path/"
+
+for dir in ${prefix}zeroed*/; do
     if [ -d "$dir" ]; then
         # Execute your Python script with the directory name as an argument
         python3 your_script.py "$dir"
