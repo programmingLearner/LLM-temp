@@ -1,10 +1,23 @@
-#!/bin/bash
+import matplotlib.pyplot as plt
 
-prefix="./some/path/"
+# Sample data
+data1 = [1, 4, 2, 6, 3]
+data2 = [3, 5, 1, 7, 4]
 
-for dir in ${prefix}zeroed*/; do
-    if [ -d "$dir" ]; then
-        # Redirecting output to a file named "output.txt", appending to its contents
-        python3 your_script.py "$dir" >> output.txt
-    fi
-done
+# Create a figure and axis
+fig, ax = plt.subplots()
+
+# Plot the two datasets
+ax.plot(data1, label="Line Chart 1", marker='o')
+ax.plot(data2, label="Line Chart 2", marker='o')
+
+# Add titles and labels
+ax.set_title("Two Line Charts")
+ax.set_xlabel("X-axis Label")
+ax.set_ylabel("Y-axis Label")
+
+# Display the legend
+ax.legend()
+
+# Show the plot
+plt.show()
