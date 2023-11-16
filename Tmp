@@ -1,18 +1,20 @@
-from transformers import BertModel
+from transformers import AutoModel
 from collections import OrderedDict
 
-# Load the pre-trained model
-model = BertModel.from_pretrained('bert-base-uncased')
+# Specify the directory to save the modified model
+save_directory = 'TinyBERT_General_6L_768D_renamed'
 
-# Create a new state dictionary with renamed parameters
+# Load the pre-trained model
+model = AutoModel.from_pretrained("huawei-noah/TinyBERT_General_6L_768D")
+
+# Rename parameters to remove the 'bert.' prefix
 new_state_dict = OrderedDict()
 for key, value in model.state_dict().items():
-    # Remove the 'bert.' prefix
-    new_key = key.replace("bert.", "")
+    new_key = key.replace("bert.", "")  # Adjust this line if the prefix is different
     new_state_dict[new_key] = value
 
-# Load the renamed state dict into the model
+# Load the modified state dictionary back into the model
 model.load_state_dict(new_state_dict)
 
 # Save the modified model
-model.save_pretrained('/path/to/save/directory')
+model.save_pretrained(save_directory)
