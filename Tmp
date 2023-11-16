@@ -1,23 +1,18 @@
-import matplotlib.pyplot as plt
+from transformers import BertModel
+from collections import OrderedDict
 
-# Sample data
-data1 = [1, 4, 2, 6, 3]
-data2 = [3, 5, 1, 7, 4]
+# Load the pre-trained model
+model = BertModel.from_pretrained('bert-base-uncased')
 
-# Create a figure and axis
-fig, ax = plt.subplots()
+# Create a new state dictionary with renamed parameters
+new_state_dict = OrderedDict()
+for key, value in model.state_dict().items():
+    # Remove the 'bert.' prefix
+    new_key = key.replace("bert.", "")
+    new_state_dict[new_key] = value
 
-# Plot the two datasets
-ax.plot(data1, label="Line Chart 1", marker='o')
-ax.plot(data2, label="Line Chart 2", marker='o')
+# Load the renamed state dict into the model
+model.load_state_dict(new_state_dict)
 
-# Add titles and labels
-ax.set_title("Two Line Charts")
-ax.set_xlabel("X-axis Label")
-ax.set_ylabel("Y-axis Label")
-
-# Display the legend
-ax.legend()
-
-# Show the plot
-plt.show()
+# Save the modified model
+model.save_pretrained('/path/to/save/directory')
