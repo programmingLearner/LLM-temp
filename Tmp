@@ -1,20 +1,24 @@
-from transformers import AutoModel
-from collections import OrderedDict
+from datasets import load_dataset
+from tqdm import tqdm
 
-# Specify the directory to save the modified model
-save_directory = 'TinyBERT_General_6L_768D_renamed'
+# Load both datasets
+bookcorpus = load_dataset("bookcorpus", split='train')
+wikipedia = load_dataset("wikipedia", "20220301.en", split='train')
 
-# Load the pre-trained model
-model = AutoModel.from_pretrained("huawei-noah/TinyBERT_General_6L_768D")
+datasets = [bookcorpus, wikipedia]  # Combine datasets into a list
 
-# Rename parameters to remove the 'bert.' prefix
-new_state_dict = OrderedDict()
-for key, value in model.state_dict().items():
-    new_key = key.replace("bert.", "")  # Adjust this line if the prefix is different
-    new_state_dict[new_key] = value
+with DocumentDatabase(reduce_memory=args.reduce_memory) as docs:
+    doc_num = 0  # Initialize document number
 
-# Load the modified state dictionary back into the model
-model.load_state_dict(new_state_dict)
+    # Iterate through each dataset
+    for dataset in datasets:
+        for entry in tqdm(dataset, desc="Loading Dataset", unit=" docs"):
+            text = entry['text'].strip()
+            tokens = tokenizer.tokenize(text)
+            docs.add_document(tokens)
+            
+            doc_num += 1
+            if doc_num % 100 == 0:
+                logger.info('loaded {} docs!'.format(doc_num))
 
-# Save the modified model
-model.save_pretrained(save_directory)
+# Add any additional processing or checks here
