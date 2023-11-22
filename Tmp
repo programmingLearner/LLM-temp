@@ -1,19 +1,1 @@
-import torch
 
-# Example tensors
-tensor1 = torch.rand(batch_size, sequence_length, hidden_size)  # replace with actual tensor
-tensor2 = torch.rand(batch_size, sequence_length, hidden_size)  # replace with actual tensor
-
-# Compute squared difference
-squared_diff = (tensor1 - tensor2) ** 2
-
-# Define weights (this can be another tensor of the same shape)
-weights = torch.ones_like(squared_diff)  # replace or modify as needed
-
-# Apply weights
-weighted_squared_diff = squared_diff * weights
-
-# Compute mean to get the weighted MSE loss
-weighted_mse_loss = weighted_squared_diff.mean()
-
-print(weighted_mse_loss)
