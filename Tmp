@@ -1,24 +1,19 @@
-from datasets import load_dataset
-from tqdm import tqdm
+import torch
 
-# Load both datasets
-bookcorpus = load_dataset("bookcorpus", split='train')
-wikipedia = load_dataset("wikipedia", "20220301.en", split='train')
+# Example tensors
+tensor1 = torch.rand(batch_size, sequence_length, hidden_size)  # replace with actual tensor
+tensor2 = torch.rand(batch_size, sequence_length, hidden_size)  # replace with actual tensor
 
-datasets = [bookcorpus, wikipedia]  # Combine datasets into a list
+# Compute squared difference
+squared_diff = (tensor1 - tensor2) ** 2
 
-with DocumentDatabase(reduce_memory=args.reduce_memory) as docs:
-    doc_num = 0  # Initialize document number
+# Define weights (this can be another tensor of the same shape)
+weights = torch.ones_like(squared_diff)  # replace or modify as needed
 
-    # Iterate through each dataset
-    for dataset in datasets:
-        for entry in tqdm(dataset, desc="Loading Dataset", unit=" docs"):
-            text = entry['text'].strip()
-            tokens = tokenizer.tokenize(text)
-            docs.add_document(tokens)
-            
-            doc_num += 1
-            if doc_num % 100 == 0:
-                logger.info('loaded {} docs!'.format(doc_num))
+# Apply weights
+weighted_squared_diff = squared_diff * weights
 
-# Add any additional processing or checks here
+# Compute mean to get the weighted MSE loss
+weighted_mse_loss = weighted_squared_diff.mean()
+
+print(weighted_mse_loss)
