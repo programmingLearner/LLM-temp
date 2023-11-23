@@ -1,1 +1,23 @@
+import argparse
+import os
 
+# Setup argument parser and define arguments
+parser = argparse.ArgumentParser()
+# parser.add_argument(...)
+args = parser.parse_args()
+
+# Convert arguments to string
+args_dict = vars(args)
+args_str = '\n'.join(f'{key}: {value}' for key, value in args_dict.items())
+
+# Define and ensure output directory exists
+output_dir = 'path/to/your/dir'  # Replace with your actual directory path
+if not os.path.exists(output_dir):
+    os.makedirs(output_dir)
+
+# Save arguments to a text file in the output directory
+args_file_path = os.path.join(output_dir, 'training_args.txt')
+with open(args_file_path, 'w') as file:
+    file.write(args_str)
+
+# Rest of your training script...
